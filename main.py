@@ -14,16 +14,16 @@ with connect('tcp://{}.local:10789'.format(target), emergency=15) as hedgehog:
 
         def motors():
             while True:
-                for i in range(20):
-                    speed = int(1000 * sin(2 * pi * i / 20))
+                for i in range(8):
+                    speed = int(1000 * sin(2 * pi * i / 8))
                     for port in range(4):
                         hedgehog.move_motor(port, speed)
                     yield
 
         def servos():
             while True:
-                for i in range(10):
-                    pos = int(1024 + 900 * sin(2 * pi * i / 10))
+                for i in range(4):
+                    pos = int(1024 + 900 * sin(2 * pi * i / 4))
                     for port in range(6):
                         hedgehog.set_servo(port, pos)
                     yield
@@ -40,13 +40,15 @@ with connect('tcp://{}.local:10789'.format(target), emergency=15) as hedgehog:
                 yield
 
         def speaker():
-            while True:
+            for _ in range(3):
                 hedgehog.set_speaker(440)
                 for _ in range(1):
                     yield
                 hedgehog.set_speaker(None)
                 for _ in range(9):
                     yield
+            while True:
+                yield
 
         m = motors()
         s = servos()
